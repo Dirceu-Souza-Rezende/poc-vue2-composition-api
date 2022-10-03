@@ -1,0 +1,9 @@
+declare module "vuetify/lib/framework";
+declare module "v-mask";
+declare module "@farm-investimentos/front-mfe-libs/helpers/axiosWrapper";
+declare module "@farm-investimentos/front-mfe-libs/helpers/store";
+declare module "@farm-investimentos/front-mfe-libs/helpers/errorBuilder";
+declare module "@farm-investimentos/front-mfe-libs/helpers/notify";
+declare module "@farm-investimentos/front-mfe-libs/helpers/queryString";
+declare module "@farm-investimentos/front-mfe-libs/consts/RequestStatusEnum";
+declare module "@farm-investimentos/front-mfe-libs/mixins/routeRole";
