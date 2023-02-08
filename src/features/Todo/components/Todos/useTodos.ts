@@ -1,55 +1,64 @@
-import useStore from "@/composables/useStore";
-import { Todo } from "@/types";
+import { useGetter, useDispatch, useStore } from "@/composables";
+import { Todo } from "@/features/Todo/types";
+import { ComposibleReturn } from "@/types";
 import RequestStatusEnum from "@farm-investimentos/front-mfe-libs/consts/RequestStatusEnum";
 
-import { computed, ComputedRef, watch } from "vue";
+import { computed, ComputedRef, Ref, ref, watch } from "vue";
 
-export type useTodosResponse = {
-  newTodo: (name: string, description: string) => void;
+export type States = {
+  name: Ref<string>;
+  description: Ref<string>;
   todos: ComputedRef<Array<Todo>>;
   addTodoRequestStatus: ComputedRef<boolean>;
   removeTodoRequestStatus: ComputedRef<boolean>;
+};
+
+export type Events = {
+  newTodo: (name: string, description: string) => void;
   fetchTodos: () => void;
   deleteTodo: (id: string) => void;
 };
 
-export const useTodos = (): useTodosResponse => {
-  const store = useStore();
+export const useTodos = (): ComposibleReturn<States, Events> => {
+  const dispatch = useDispatch();
+  const name = ref<string>("");
+  const description = ref<string>("");
 
   const newTodo = (name: string, description: string): void => {
-    store.dispatch("todoModule/addTodo", { name, description });
+    dispatch<{ name: string; description: string }>("todoModule", "addTodo", { name, description });
   };
 
   const deleteTodo = (id: string): void => {
-    store.dispatch("todoModule/removeTodo", id);
+    dispatch("todoModule", "removeTodo", id);
   };
 
   const fetchTodos = (): void => {
-    store.dispatch("todoModule/fetchTodos");
+    dispatch("todoModule", "fetchTodos");
   };
 
-  const todos = computed<Todo[]>(() => {
-    return store.getters["todoModule/todos"];
-  });
+  const todos = computed<Todo[]>(useGetter("todoModule", "todos"));
 
-  const addTodoRequestStatus = computed<typeof RequestStatusEnum>(() => {
-    return store.getters["todoModule/addTodoRequestStatus"];
-  });
+  const addTodoRequestStatus = computed<typeof RequestStatusEnum>(
+    useGetter("todoModule", "addTodoRequestStatus")
+  );
 
-  const removeTodoRequestStatus = computed<typeof RequestStatusEnum>(() => {
-    return store.getters["todoModule/removeTodoRequestStatus"];
-  });
+  const removeTodoRequestStatus = computed<typeof RequestStatusEnum>(
+    useGetter("todoModule", "removeTodoRequestStatus")
+  );
 
   watch(addTodoRequestStatus, (newValue) => {
     if (newValue === RequestStatusEnum.SUCCESS) {
-      store.dispatch("todoModule/fetchTodos");
+      dispatch("todoModule", "fetchTodos");
     }
   });
   watch(removeTodoRequestStatus, (newValue) => {
     if (newValue === RequestStatusEnum.SUCCESS) {
-      store.dispatch("todoModule/fetchTodos");
+      dispatch("todoModule", "fetchTodos");
     }
   });
 
-  return { newTodo, todos, fetchTodos, deleteTodo, addTodoRequestStatus, removeTodoRequestStatus };
+  return {
+    states: { name, description, todos, addTodoRequestStatus, removeTodoRequestStatus },
+    events: { newTodo, fetchTodos, deleteTodo },
+  };
 };

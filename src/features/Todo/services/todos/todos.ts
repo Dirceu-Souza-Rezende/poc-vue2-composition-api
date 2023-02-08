@@ -1,5 +1,5 @@
 import client from "@/configurations/services/todos";
-import { Todo } from "@/types";
+import { Todo } from "@/features/Todo/types";
 import { IAPIResponse } from "@farm-investimentos/front-mfe-libs-ts";
 
 export const addTodo = async (todo: Todo): Promise<IAPIResponse<any>> => {

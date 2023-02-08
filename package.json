@@ -9,6 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@farm-investimentos/front-mfe-components": "^11.0.3",
     "@farm-investimentos/front-mfe-libs": "^0.7.1",
     "@farm-investimentos/front-mfe-libs-ts": "^0.5.0",
     "@vue/composition-api": "^1.6.2",

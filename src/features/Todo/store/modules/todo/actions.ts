@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import RequestStatusEnum from "@farm-investimentos/front-mfe-libs/consts/RequestStatusEnum";
 import errorBuilder from "@farm-investimentos/front-mfe-libs/helpers/errorBuilder";
-import { getTodos } from "@/services/todos";
+import { getTodos } from "@/features/Todo/services/todos";
 import { fetchDefaultParser } from "@farm-investimentos/front-mfe-libs/helpers/store";
 import { Commit } from "vuex";
 import { addTodo, removeTodo } from "../../../services/todos";
-import { Todo } from "@/types";
+import { Todo } from "@/features/Todo/types";
 
 export default {
   async fetchTodos({ commit }: { commit: Commit }): Promise<void> {
@@ -36,7 +36,6 @@ export default {
 
     try {
       await removeTodo(id);
-
       commit("setRemoveTodoRequestStatus", RequestStatusEnum.SUCCESS);
     } catch (error) {
       commit("setRemoveTodoRequestStatus", errorBuilder(error));
